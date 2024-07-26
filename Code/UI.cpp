@@ -229,3 +229,52 @@ void printPriorityScreen(const TodoListItem& a, const TodoListItem& b, int mode)
     print(L"\"?\n");
     print(L"Answer (YES/NO): ");
 }
+template<class cmpTLI> void printEditListScreen(const TodoList<cmpTLI>& currentList, int mode)
+{
+    clearscreen();
+    printLogo();
+
+    print(L"Format for each entry: is ticked, name, note, dateAdded, deadline\n\n");
+    
+    std::vector<TodoListItem> itemList = currentList.getItemList();
+
+    for(auto& item : itemList)
+    {
+        if(item.getTick())
+            print(L"\x2611");
+        else
+            print(L"\x2610");
+
+        print(L" | ");
+        print(item.getName());
+        print(L" | ");
+        print(item.getNote());
+        print(L" | ");
+        print(time_point_to_iso8601(item.getDateAdded()));
+        print(L" | ");
+        print(time_point_to_iso8601(item.getDeadline()));
+        print(L"\n");
+    }
+
+    print(L"\n");
+
+    if(mode == 1)
+    {
+        print(L"INVALID MODE\n");
+    }
+
+    print(L"-1 = ");
+    print(L"Quit\n", RED);
+    print(L"0 = ");
+    print(L"Go back\n", YELLOW);
+    print(L"1 = ");
+    print(L"Tick/Untick item\n", YELLOW);
+    print(L"2 = ");
+    print(L"Add item\n", YELLOW);
+    print(L"3 = ");
+    print(L"Remove item\n", YELLOW);
+    print(L"4 = ");
+    print(L"Update item priority\n", YELLOW);
+    print(L"5 = ");
+    print(L"Resort entire list\n", RED);
+}

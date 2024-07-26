@@ -19,7 +19,7 @@ public:
     void setPath(std::filesystem::path path);
     void genItemList();
     std::filesystem::path getPath();
-    std::vector<TodoListItem>& getItemList();
+    std::vector<TodoListItem> getItemList() const;
 
     void add(TodoListItem item);
     void remove(std::wstring itemName);
@@ -57,7 +57,7 @@ template<class cmpTodoListItem> std::filesystem::path TodoList<cmpTodoListItem>:
 {
     return this->listPath;
 }
-template<class cmpTodoListItem> std::vector<TodoListItem>& TodoList<cmpTodoListItem>::getItemList()
+template<class cmpTodoListItem> std::vector<TodoListItem> TodoList<cmpTodoListItem>::getItemList() const
 {
     return this->itemList;
 }

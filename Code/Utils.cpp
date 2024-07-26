@@ -5,6 +5,9 @@
 #include <io.h>
 #include <fcntl.h>
 #include <fstream>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
 
 void init()
 {
@@ -39,4 +42,17 @@ bool invalidName(std::wstring input)
     }
 
     return false;
+}
+std::wstring time_point_to_iso8601(const std::chrono::system_clock::time_point& tp) {
+
+    std::time_t time = std::chrono::system_clock::to_time_t(tp);
+    
+    std::tm tm;
+
+    localtime_s(&tm, &time);
+    
+    std::wostringstream woss;
+    woss << std::put_time(&tm, L"%Y-%m-%dT%H:%M:%SZ"); // ISO 8601 format
+
+    return woss.str();
 }

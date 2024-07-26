@@ -1,7 +1,7 @@
 #include "Screens.h"
 #include <fstream>
 
-std::filesystem::path selectScreen(bool& goback)
+std::filesystem::path selectScreen(bool& goMainScreen)
 {
     bool quit = false, validInput = true;
     std::wstring input;
@@ -23,7 +23,7 @@ std::filesystem::path selectScreen(bool& goback)
         else if (input == L"0")
         {
             validInput = true;
-            goback = true;
+            goMainScreen = true;
             return path;
         }
         else if (input == L"..")
@@ -74,7 +74,7 @@ std::filesystem::path selectScreen(bool& goback)
         }
     }
 
-    goback = false;
+    goMainScreen = false;
     return path;
 }
 void createDirectoryScreen(std::filesystem::path path)

@@ -1,5 +1,5 @@
 // TODO: 
-// Create: command to return
+// Create: command to return from selected list
 
 #include <iostream>
 #include <fstream>
@@ -30,79 +30,47 @@ public:
     }
 };
 
-// struct tliHash
-// {
-//     long long operator()(const TodoListItem& x) const
-//     {
-//         std::hash<std::wstring> has;
-
-//         return has(x.getName());
-//     }
-// };
-
-// class cmpTLI
-// {
-// private:
-//     solveNoopFunc solveNoop;
-//     std::unordered_map<TodoListItem, std::unordered_map<TodoListItem, int, tliHash>, tliHash> checked;
-
-// public:
-//     bool operator()(const TodoListItem& a, const TodoListItem& b)
-//     {
-//         TodoListItem aCopy = a, bCopy = b;
-
-//         if(a.getPriority() == -1 || b.getPriority() == -1)
-//         {
-//             int verdict = checked[aCopy][bCopy];
-
-//             if(verdict == 0)
-//             {
-//                 verdict = solveNoop(a, b);
-//             }
-//             else if(verdict == -1)
-//             {
-//                 verdict = 0;
-//             }
-
-//             return verdict;
-//         }
-
-//         return a.getPriority() < b.getPriority();
-//     }
-// };
-
 int main()
 {
-    init();
+    // init();
 
-    int mainScreenMode;
-    bool goback = true;
+    int mainScreenMode = 69;
+    bool goMainScreen = true, goSelectScreen = false;
     std::filesystem::path chosenPath;
 
-    while(goback)
-    {
-        mainScreenMode = mainScreen();
+    bool quitAfterEdit = 0;
 
-        if(mainScreenMode == -1)
-            return 0;
-        
-        chosenPath = selectScreen(goback);
+    while(!quitAfterEdit)
+    {   
+        while(goMainScreen)
+        {   
+            if(!goSelectScreen)
+                mainScreenMode = mainScreen();
+
+            if(mainScreenMode == -1)
+                return 0;
+            
+            chosenPath = selectScreen(goMainScreen);
+            
+            if(goMainScreen)
+                goSelectScreen = false;
+        }
+
+        TodoList<cmpTLI> currentList;
+
+        currentList.setPath(chosenPath);
+        currentList.genItemList();
+
+        quitAfterEdit = editListScreen(currentList);
+
+        std::filesystem::path savePath = BACKUP_PATH / currentList.getPath().stem();
+        savePath += ".backup";
+
+        currentList.writeToFile(savePath);
+        currentList.writeToFile(chosenPath);
+
+        goSelectScreen = true;
     }
-
-    // chosenPath = selectScreen(goback);
-    
-    TodoList<cmpTLI> currentList;
-
-    currentList.setPath(chosenPath);
-    currentList.genItemList();
-
-    currentList.updateList();
-
-    std::filesystem::path savePath = BACKUP_PATH / currentList.getPath().stem();
-    savePath += ".backup";
-
-    currentList.writeToFile(savePath);
-    currentList.writeToFile(chosenPath);
 
     return 0;
 }
